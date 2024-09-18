@@ -6,9 +6,14 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors({
-  origin: 'https://your-github-username.github.io'
-}));
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production'
+    ? 'https://jewelshovan.github.io'
+    : ['http://localhost:3000', 'http://localhost:5000'], // Add any other local ports you might use
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.post('/api/send-email', async (req, res) => {
@@ -24,7 +29,7 @@ app.post('/api/send-email', async (req, res) => {
 
   let mailOptions = {
     from: process.env.EMAIL_USER,
-    to: 'your-email@example.com',
+    to: 'jhovan@umich.edu',
     subject: `New message from ${name}`,
     text: `From: ${name} (${email})\n\nMessage: ${message}`
   };
